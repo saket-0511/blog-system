@@ -25,10 +25,10 @@ class BlogController extends Controller
         $total   = Blog::count();
         $cats    = Blog::select('category')->distinct()->count();
         $recent  = Blog::latest()->take(5)->get();
-        $monthly = Blog::selectRaw('COUNT(*) as count, MONTH(published_at) as month')
-                       ->whereYear('published_at', date('Y'))
-                       ->groupBy('month')
-                       ->pluck('count', 'month');
+	$monthly = Blog::selectRaw("COUNT(*) as count, strftime('%m', published_at) as month")
+               ->whereYear('published_at', date('Y'))
+               ->groupBy('month')
+               ->pluck('count', 'month');
 
         return view('admin.dashboard', compact('total', 'cats', 'recent', 'monthly'));
     }
